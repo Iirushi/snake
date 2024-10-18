@@ -43,7 +43,7 @@ int initGame(SDL_Renderer* renderer) {
     gameOverTexture = loadTexture("game_over.png", renderer);
     if (!gameOverTexture) return 0;
 
-    headUpTexture = loadTexture("head_up.png", renderer); //debut chat gpt
+    headUpTexture = loadTexture("head_up.png", renderer); // debut chat gpt
     headRightTexture = loadTexture("head_right.png", renderer);
     headDownTexture = loadTexture("head_down.png", renderer);
     headLeftTexture = loadTexture("head_left.png", renderer);
@@ -61,12 +61,12 @@ int initGame(SDL_Renderer* renderer) {
     tailRightTexture = loadTexture("tail_right.png", renderer);
     tailDownTexture = loadTexture("tail_down.png", renderer);
     tailLeftTexture = loadTexture("tail_left.png", renderer);
-    if (!tailUpTexture || !tailRightTexture || !tailDownTexture || !tailLeftTexture) return 0; //fin chat gpt
+    if (!tailUpTexture || !tailRightTexture || !tailDownTexture || !tailLeftTexture) return 0;
 
     foodTexture = loadTexture("food.png", renderer);
     if (!foodTexture) return 0;
 
-    wallTexture = loadTexture("wall.png", renderer);
+    wallTexture = loadTexture("wall.png", renderer); // fin chat gpt
     if (!wallTexture) return 0;
 
     return 1;
@@ -97,12 +97,12 @@ void placeFood() {
 }
 
 void updateSnake() {
-  
+   
     for (int i = snake.length - 1; i > 0; i--) {
         snake.body[i] = snake.body[i - 1];
     }
 
-  
+   
     switch (snake.direction) {
         case UP: snake.body[0].y -= 1; break;
         case DOWN: snake.body[0].y += 1; break;
@@ -110,21 +110,32 @@ void updateSnake() {
         case RIGHT: snake.body[0].x += 1; break;
     }
 
-   
     if (snake.body[0].x == food.position.x && snake.body[0].y == food.position.y) {
+       
+        Position newSegment = snake.body[snake.length - 1];
         snake.length++;
+        snake.body[snake.length - 1] = newSegment;
+
+        
+        switch (snake.direction) {
+            case UP: snake.body[snake.length - 1].y += 1; break;
+            case DOWN: snake.body[snake.length - 1].y -= 1; break;
+            case LEFT: snake.body[snake.length - 1].x += 1; break;
+            case RIGHT: snake.body[snake.length - 1].x -= 1; break;
+        }
+
         placeFood();
     }
 }
 
 int checkCollisions() {
- 
+   
     if (snake.body[0].x < 1 || snake.body[0].x >= GRID_WIDTH - 1 ||
         snake.body[0].y < 1 || snake.body[0].y >= GRID_HEIGHT - 1) {
         return 1;
     }
 
-    
+   
     for (int i = 1; i < snake.length; i++) {
         if (snake.body[0].x == snake.body[i].x && snake.body[0].y == snake.body[i].y) {
             return 1;
@@ -138,7 +149,7 @@ void renderGame(SDL_Renderer* renderer) {
     
     SDL_Rect wallRect;
     for (int x = 0; x < GRID_WIDTH; x++) {
-        wallRect = (SDL_Rect){x * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE};
+        wallRect = (SDL_Rect){x * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE}; // debut chat gpt
         SDL_RenderCopy(renderer, wallTexture, NULL, &wallRect);
         wallRect = (SDL_Rect){x * TILE_SIZE, (GRID_HEIGHT - 1) * TILE_SIZE, TILE_SIZE, TILE_SIZE};
         SDL_RenderCopy(renderer, wallTexture, NULL, &wallRect);
@@ -159,8 +170,8 @@ void renderGame(SDL_Renderer* renderer) {
         case LEFT: SDL_RenderCopy(renderer, headLeftTexture, NULL, &headRect); break;
     }
 
-    
-    for (int i = 1; i < snake.length - 1; i++) {  //debut chat gpt
+   
+    for (int i = 1; i < snake.length - 1; i++) {
         SDL_Rect bodyRect = {snake.body[i].x * TILE_SIZE, snake.body[i].y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
         Direction prevDirection = (snake.body[i].x == snake.body[i - 1].x) ? (snake.body[i].y > snake.body[i - 1].y ? UP : DOWN) : (snake.body[i].x > snake.body[i - 1].x ? LEFT : RIGHT);
         Direction nextDirection = (snake.body[i].x == snake.body[i + 1].x) ? (snake.body[i].y > snake.body[i + 1].y ? UP : DOWN) : (snake.body[i].x > snake.body[i + 1].x ? LEFT : RIGHT);
@@ -176,7 +187,7 @@ void renderGame(SDL_Renderer* renderer) {
         } else if ((prevDirection == DOWN && nextDirection == RIGHT) || (prevDirection == RIGHT && nextDirection == DOWN)) {
             SDL_RenderCopy(renderer, bodyBottomRightTexture, NULL, &bodyRect);
         } else if ((prevDirection == DOWN && nextDirection == LEFT) || (prevDirection == LEFT && nextDirection == DOWN)) {
-            SDL_RenderCopy(renderer, bodyBottomLeftTexture, NULL, &bodyRect);
+            SDL_RenderCopy(renderer, bodyBottomLeftTexture, NULL, &bodyRect); // fin chat gpt
         }
     }
 
@@ -184,7 +195,7 @@ void renderGame(SDL_Renderer* renderer) {
     SDL_Rect tailRect = {snake.body[snake.length - 1].x * TILE_SIZE, snake.body[snake.length - 1].y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
     Direction tailDirection = (snake.body[snake.length - 1].x == snake.body[snake.length - 2].x) ? 
         (snake.body[snake.length - 1].y > snake.body[snake.length - 2].y ? DOWN : UP) : 
-        (snake.body[snake.length - 1].x > snake.body[snake.length - 2].x ? RIGHT : LEFT); // fin chat gpt
+        (snake.body[snake.length - 1].x > snake.body[snake.length - 2].x ? RIGHT : LEFT);
     switch (tailDirection) {
         case UP: SDL_RenderCopy(renderer, tailUpTexture, NULL, &tailRect); break;
         case RIGHT: SDL_RenderCopy(renderer, tailRightTexture, NULL, &tailRect); break;

@@ -3,7 +3,7 @@
 #include "snake.h"
 
 int main(int argc, char* args[]) {
-    
+   
     if (SDL_Init(SDL_INIT_VIDEO) < 0 || IMG_Init(IMG_INIT_PNG) == 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 1;
@@ -50,7 +50,7 @@ int main(int argc, char* args[]) {
         updateSnake();
         if (checkCollisions()) {
             printf("Game Over\n");
-            
+           
             SDL_RenderClear(renderer);
             SDL_RenderCopy(renderer, gameOverTexture, NULL, NULL);
             SDL_RenderPresent(renderer);

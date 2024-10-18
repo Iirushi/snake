@@ -12,6 +12,7 @@
 #define GRID_HEIGHT (WINDOW_HEIGHT / TILE_SIZE)
 
 typedef enum { UP, DOWN, LEFT, RIGHT } Direction;
+typedef enum { MENU_START, GAME_RUNNING, MENU_SCORE, MENU_RESTART } GameState;
 
 typedef struct {
     int x, y;
@@ -55,5 +56,6 @@ int checkCollisions();
 void renderGame(SDL_Renderer* renderer);
 void cleanupGame();
 void changeDirection(Direction newDirection);
+void renderMenu(SDL_Renderer* renderer, const char* message);
 
 #endif
